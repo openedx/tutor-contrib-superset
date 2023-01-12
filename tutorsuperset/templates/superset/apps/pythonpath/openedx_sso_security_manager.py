@@ -17,7 +17,6 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         """
         res = super().set_oauth_session(provider, oauth_response)
 
-        # TODO: better to save to a database
         if provider == "openedxsso":
             _set_oauth_token(oauth_response)
         return res
@@ -112,7 +111,7 @@ def can_view_courses(username, field_name='course_id'):
     courses = _get_courses(username)
     logging.debug(f"{username} is course staff on {courses}")
 
-    # FIXME: what happens when the list of courses grows beyond what the query will handle?
+    # TODO: what happens when the list of courses grows beyond what the query will handle?
     if courses:
         course_id_list = ", ".join(
             f'"{course_id}"' for course_id in courses

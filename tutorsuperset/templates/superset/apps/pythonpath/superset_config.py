@@ -33,6 +33,8 @@ from typing import Optional
 from cachelib.file import FileSystemCache
 from celery.schedules import crontab
 
+from superset.superset_typing import CacheConfig
+
 
 def get_env_variable(var_name: str, default: Optional[str] = None) -> str:
     """Get the environment variable or raise exception."""
@@ -82,6 +84,21 @@ CACHE_CONFIG = {
 }
 DATA_CACHE_CONFIG = CACHE_CONFIG
 
+# Cache for dashboard filter state
+FILTER_STATE_CACHE_CONFIG: CacheConfig = {
+    "CACHE_DEFAULT_TIMEOUT": int(timedelta(days=90).total_seconds()),
+    # should the timeout be reset when retrieving a cached value
+    "REFRESH_TIMEOUT_ON_RETRIEVAL": True,
+    **CACHE_CONFIG,
+}
+
+# Cache for explore form data state
+EXPLORE_FORM_DATA_CACHE_CONFIG: CacheConfig = {
+    "CACHE_DEFAULT_TIMEOUT": int(timedelta(days=7).total_seconds()),
+    # should the timeout be reset when retrieving a cached value
+    "REFRESH_TIMEOUT_ON_RETRIEVAL": True,
+    **CACHE_CONFIG,
+}
 
 class CeleryConfig(object):
     BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"

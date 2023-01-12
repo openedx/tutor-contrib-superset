@@ -20,10 +20,9 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_TAG", "2.0.1"),
         ("SUPERSET_HOST", "{{ LMS_HOST }}"),
         ("SUPERSET_PORT", "8088"),
-        # TODO: use our mysql database instead?
-        ("SUPERSET_DB_DIALECT", "postgresql"),
-        ("SUPERSET_DB_HOST", "superset_db"),
-        ("SUPERSET_DB_PORT", "5432"),
+        ("SUPERSET_DB_DIALECT", "mysql"),
+        ("SUPERSET_DB_HOST", "{{ MYSQL_HOST }}"),
+        ("SUPERSET_DB_PORT", "{{ MYSQL_PORT }}"),
         ("SUPERSET_DB_NAME", "superset"),
         ("SUPERSET_DB_USERNAME", "superset"),
         ("SUPERSET_OAUTH2_BASE_URL", "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}:8000"),
@@ -73,6 +72,7 @@ MY_INIT_TASKS = [
     # tutorsuperset/templates/superset/jobs/init/lms.sh
     # And then add the line:
     ### ("lms", ("superset", "jobs", "init", "lms.sh")),
+    ("mysql", ("superset", "jobs", "init", "init-mysql.sh")),
     ("superset", ("superset", "jobs", "init", "init-superset.sh")),
     ("lms", ("superset", "jobs", "init", "init-openedx.sh")),
 ]
@@ -162,15 +162,16 @@ SUPERSET_DOCKER_COMPOSE_SHARED = """image: apache/superset:{{ SUPERSET_TAG }}
     OPENEDX_COURSES_LIST_URL: {{ SUPERSET_OPENEDX_COURSES_LIST_URL }}
     SECRET_KEY: {{ SUPERSET_SECRET_KEY }}
     PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
-    REDIS_HOST: superset_cache
-    REDIS_PORT: 6379
+    REDIS_HOST: {{ REDIS_HOST }}
+    REDIS_PORT: {{ REDIS_PORT }}
+    REDIS_PASSWORD: {{ REDIS_PASSWORD }}
     FLASK_ENV: production
     SUPERSET_ENV: production
     SUPERSET_PORT: {{ SUPERSET_PORT }}
   user: root
   depends_on:
-    - superset-db
-    - superset-cache
+    - mysql
+    - redis
   volumes:
     - ../../env/plugins/superset/apps/docker:/app/docker
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
@@ -182,53 +183,26 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-services",
         f"""
-superset-cache:
-  image: redis:latest
-  container_name: superset_cache
-  restart: unless-stopped
-  volumes:
-    - ../../data/superset/redis:/data
-
-superset-db:
-  environment:
-    POSTGRES_DB: {{{{ SUPERSET_DB_NAME }}}}
-    POSTGRES_USER: {{{{ SUPERSET_DB_USERNAME }}}}
-    POSTGRES_PASSWORD: {{{{ SUPERSET_DB_PASSWORD }}}}
-  image: postgres:10
-  container_name: superset_db
-  restart: unless-stopped
-  volumes:
-    - ../../data/superset/postgresql:/var/lib/postgresql/data
-
 superset-app:
   {SUPERSET_DOCKER_COMPOSE_SHARED}
-  container_name: superset_app
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
     - 8088:{{{{ SUPERSET_PORT }}}}
+  depends_on:
+    - superset-worker
+    - superset-worker-beat
 
 superset-worker:
   {SUPERSET_DOCKER_COMPOSE_SHARED}
-  container_name: superset_worker
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
 
 superset-worker-beat:
   {SUPERSET_DOCKER_COMPOSE_SHARED}
-  container_name: superset_worker_beat
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     disable: true
-
-# All the superset services we need to run together
-superset:
-  {SUPERSET_DOCKER_COMPOSE_SHARED}
-  command: ["bash"]
-  depends_on:
-    - superset-app
-    - superset-worker
-    - superset-worker-beat
         """
     )
 )
@@ -241,7 +215,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 superset-job:
   {SUPERSET_DOCKER_COMPOSE_SHARED}
   depends_on:
-    - superset
+    - superset-app
         """
     )
 )
