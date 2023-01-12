@@ -25,13 +25,11 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_DB_PORT", "{{ MYSQL_PORT }}"),
         ("SUPERSET_DB_NAME", "superset"),
         ("SUPERSET_DB_USERNAME", "superset"),
-        ("SUPERSET_OAUTH2_BASE_URL", "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}:8000"),
-        ("SUPERSET_OAUTH2_ACCESS_TOKEN_URL", "{{ SUPERSET_OAUTH2_BASE_URL }}/oauth2/access_token/"),
-        ("SUPERSET_OAUTH2_AUTHORIZE_URL", "{{ SUPERSET_OAUTH2_BASE_URL }}/oauth2/authorize/"),
-        ("SUPERSET_OPENEDX_USERNAME_URL", "{{ SUPERSET_OAUTH2_BASE_URL }}/api/user/v1/me"),
-        ("SUPERSET_OPENEDX_USER_PROFILE_URL", "{{ SUPERSET_OAUTH2_BASE_URL }}/api/user/v1/accounts/{username}"),
-        ("SUPERSET_OPENEDX_COURSES_LIST_URL",
-         "{{ SUPERSET_OAUTH2_BASE_URL }}/api/courses/v1/courses/?permissions={permission}&username={username}"),
+        ("SUPERSET_OAUTH2_ACCESS_TOKEN_PATH", "/oauth2/access_token/"),
+        ("SUPERSET_OAUTH2_AUTHORIZE_PATH", "/oauth2/authorize/"),
+        ("SUPERSET_OPENEDX_USERNAME_PATH", "/api/user/v1/me"),
+        ("SUPERSET_OPENEDX_USER_PROFILE_PATH", "/api/user/v1/accounts/{username}"),
+        ("SUPERSET_OPENEDX_COURSES_LIST_PATH", "/api/courses/v1/courses/?permissions={permission}&username={username}"),
     ]
 )
 
@@ -138,7 +136,16 @@ hooks.Filters.ENV_TEMPLATE_TARGETS.add_items(
 )
 
 # docker-compose statements shared between the superset services
-SUPERSET_DOCKER_COMPOSE_SHARED = """image: apache/superset:{{ SUPERSET_TAG }}
+SUPERSET_DOCKER_COMPOSE_COMMON = """image: apache/superset:{{ SUPERSET_TAG }}
+  user: root
+  depends_on:
+    - mysql
+    - redis
+  volumes:
+    - ../../env/plugins/superset/apps/docker:/app/docker
+    - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
+    - ../../env/plugins/superset/apps/superset_home:/app/superset_home
+  restart: unless-stopped
   environment:
     DATABASE_DIALECT: {{ SUPERSET_DB_DIALECT }}
     DATABASE_HOST: {{ SUPERSET_DB_HOST }}
@@ -154,12 +161,6 @@ SUPERSET_DOCKER_COMPOSE_SHARED = """image: apache/superset:{{ SUPERSET_TAG }}
     OPENEDX_MYSQL_PASSWORD: {{ OPENEDX_MYSQL_PASSWORD }}
     OAUTH2_CLIENT_ID: {{ SUPERSET_OAUTH2_CLIENT_ID }}
     OAUTH2_CLIENT_SECRET: {{ SUPERSET_OAUTH2_CLIENT_SECRET }}
-    OAUTH2_BASE_URL: {{ SUPERSET_OAUTH2_BASE_URL }}
-    OAUTH2_ACCESS_TOKEN_URL: {{ SUPERSET_OAUTH2_ACCESS_TOKEN_URL }}
-    OAUTH2_AUTHORIZE_URL: {{ SUPERSET_OAUTH2_AUTHORIZE_URL }}
-    OPENEDX_USERNAME_URL: {{ SUPERSET_OPENEDX_USERNAME_URL }}
-    OPENEDX_USER_PROFILE_URL: {{ SUPERSET_OPENEDX_USER_PROFILE_URL }}
-    OPENEDX_COURSES_LIST_URL: {{ SUPERSET_OPENEDX_COURSES_LIST_URL }}
     SECRET_KEY: {{ SUPERSET_SECRET_KEY }}
     PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
     REDIS_HOST: {{ REDIS_HOST }}
@@ -167,24 +168,33 @@ SUPERSET_DOCKER_COMPOSE_SHARED = """image: apache/superset:{{ SUPERSET_TAG }}
     REDIS_PASSWORD: {{ REDIS_PASSWORD }}
     FLASK_ENV: production
     SUPERSET_ENV: production
+    SUPERSET_HOST: {{ SUPERSET_HOST }}
     SUPERSET_PORT: {{ SUPERSET_PORT }}
-  user: root
-  depends_on:
-    - mysql
-    - redis
-  volumes:
-    - ../../env/plugins/superset/apps/docker:/app/docker
-    - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
-    - ../../env/plugins/superset/apps/superset_home:/app/superset_home
-  restart: unless-stopped"""
+    OAUTH2_ACCESS_TOKEN_PATH: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
+    OAUTH2_AUTHORIZE_PATH: "{{ SUPERSET_OAUTH2_AUTHORIZE_PATH }}"
+    OPENEDX_USERNAME_PATH: "{{ SUPERSET_OPENEDX_USERNAME_PATH }}"
+    OPENEDX_USER_PROFILE_PATH: "{{ SUPERSET_OPENEDX_USER_PROFILE_PATH }}"
+    OPENEDX_COURSES_LIST_PATH: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}" """
+
+########################################
+# LOCAL services
+# Run with `tutor local ...`
+########################################
+
+# OPENEDX_LMS_ROOT_URL for local runs on default port (:80 for http, :443 for https)
+SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL = (
+    SUPERSET_DOCKER_COMPOSE_COMMON +
+    '\n    OPENEDX_LMS_ROOT_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"'
+)
 
 # Modified from https://github.com/apache/superset/blob/969c963/docker-compose-non-dev.yml
+
 hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-services",
         f"""
 superset-app:
-  {SUPERSET_DOCKER_COMPOSE_SHARED}
+  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
     - 8088:{{{{ SUPERSET_PORT }}}}
@@ -193,13 +203,13 @@ superset-app:
     - superset-worker-beat
 
 superset-worker:
-  {SUPERSET_DOCKER_COMPOSE_SHARED}
+  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
 
 superset-worker-beat:
-  {SUPERSET_DOCKER_COMPOSE_SHARED}
+  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     disable: true
@@ -213,13 +223,65 @@ hooks.Filters.ENV_PATCHES.add_item(
         "local-docker-compose-jobs-services",
         f"""
 superset-job:
-  {SUPERSET_DOCKER_COMPOSE_SHARED}
+  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   depends_on:
     - superset-app
         """
     )
 )
 
+########################################
+# DEV services
+# Run with `tutor dev ...`
+########################################
+
+# OPENEDX_LMS_ROOT_URL for dev must include the LMS dev port
+SUPERSET_DOCKER_COMPOSE_COMMON_DEV = (
+    SUPERSET_DOCKER_COMPOSE_COMMON +
+    '\n    OPENEDX_LMS_ROOT_URL: "http://{{ LMS_HOST }}:8000"'
+)
+
+# Modified from https://github.com/apache/superset/blob/969c963/docker-compose-non-dev.yml
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "local-docker-compose-dev-services",
+        f"""
+superset-app:
+  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
+  command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+  ports:
+    - 8088:{{{{ SUPERSET_PORT }}}}
+  depends_on:
+    - superset-worker
+    - superset-worker-beat
+
+superset-worker:
+  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
+  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
+  healthcheck:
+    test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
+
+superset-worker-beat:
+  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
+  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
+  healthcheck:
+    disable: true
+        """
+    )
+)
+
+# Initialization jobs
+hooks.Filters.ENV_PATCHES.add_item(
+    (
+        "local-docker-compose-dev-jobs-services",
+        f"""
+superset-job:
+  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
+  depends_on:
+    - superset-app
+        """
+    )
+)
 
 ########################################
 # PATCH LOADING

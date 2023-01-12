@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urljoin
 from flask_appbuilder.security.manager import AUTH_OAUTH
 
 # Application secret key
@@ -14,10 +15,11 @@ OPENEDX_DATABASE = {
     'password': os.environ["OPENEDX_MYSQL_PASSWORD"],
 }
 
+OPENEDX_LMS_ROOT_URL = os.environ["OPENEDX_LMS_ROOT_URL"]
 OPENEDX_API_URLS = {
-    "get_username": os.environ["OPENEDX_USERNAME_URL"],
-    "get_profile": os.environ["OPENEDX_USER_PROFILE_URL"],
-    "get_courses": os.environ["OPENEDX_COURSES_LIST_URL"],
+    "get_username": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_USERNAME_PATH"]),
+    "get_profile": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_USER_PROFILE_PATH"]),
+    "get_courses": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_COURSES_LIST_PATH"]),
 }
 
 # Set the authentication type to OAuth
@@ -40,9 +42,9 @@ OAUTH_PROVIDERS = [
             'access_token_headers':{    # Additional headers for calls to access_token_url
                 'Authorization': 'Basic Base64EncodedClientIdAndSecret'
             },
-            'api_base_url': os.environ["OAUTH2_BASE_URL"],
-            'access_token_url': os.environ["OAUTH2_ACCESS_TOKEN_URL"],
-            'authorize_url': os.environ["OAUTH2_AUTHORIZE_URL"],
+            'api_base_url': OPENEDX_LMS_ROOT_URL,
+            'access_token_url': urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OAUTH2_ACCESS_TOKEN_PATH"]),
+            'authorize_url': urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OAUTH2_AUTHORIZE_PATH"]),
         }
     }
 ]
