@@ -1,0 +1,2 @@
+authlib  # OAuth2
+mysqlclient
