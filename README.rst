@@ -1,4 +1,4 @@
-superset plugin for `Tutor <https://docs.tutor.overhang.io>`__
+Superset plugin for `Tutor <https://docs.tutor.overhang.io>`__
 ===================================================================================
 
 Installation
@@ -6,7 +6,7 @@ Installation
 
 ::
 
-    pip install git+https://github.com/open-craft/tutor-contrib-superset
+    pip install git+https://github.com/openedx/tutor-contrib-superset
 
 Usage
 -----
