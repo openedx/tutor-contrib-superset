@@ -1,5 +1,7 @@
-superset plugin for `Tutor <https://docs.tutor.overhang.io>`__
+Apache Superset plugin for `Tutor <https://docs.tutor.overhang.io>`__
 ===================================================================================
+
+Runs `Apache Superset <https://superset.apache.org>`__ in the Tutor environment.
 
 Installation
 ------------

@@ -7,7 +7,7 @@ apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: 'tutor-contrib-superset'
-  description: "Tutor plugin for the ClickHouse database."
+  description: "Tutor plugin for the Superset data visualization system."
   annotations:
     # (Optional) Annotation keys and values can be whatever you want.
     # We use it in Open edX repos to have a comma-separated list of GitHub user
