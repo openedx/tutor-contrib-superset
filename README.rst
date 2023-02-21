@@ -13,7 +13,7 @@ Installation
 
 ::
 
-    pip install git+https://github.com/open-craft/tutor-contrib-superset
+    pip install git+https://github.com/openedx/tutor-contrib-superset
 
 Usage
 -----
