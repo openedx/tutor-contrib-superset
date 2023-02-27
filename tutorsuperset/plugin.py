@@ -144,6 +144,7 @@ SUPERSET_DOCKER_COMPOSE_COMMON = """image: apache/superset:{{ SUPERSET_TAG }}
   volumes:
     - ../../env/plugins/superset/apps/docker:/app/docker
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
+    - ../../env/plugins/superset/apps/data:/app/data
     - ../../env/plugins/superset/apps/superset_home:/app/superset_home
   restart: unless-stopped
   environment:

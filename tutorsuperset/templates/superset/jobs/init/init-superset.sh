@@ -50,4 +50,5 @@ echo_step "1" "Complete" "Applying DB migrations"
 # Create default roles and permissions
 echo_step "2" "Starting" "Setting up roles and perms"
 superset init
+superset fab import-roles -p /app/data/roles.json
 echo_step "2" "Complete" "Setting up roles and perms"
