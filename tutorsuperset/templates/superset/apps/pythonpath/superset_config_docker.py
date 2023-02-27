@@ -68,7 +68,7 @@ AUTH_ROLES_MAPPING = {
     "public": ["Public"],    # AKA anonymous users
 }
 
-from openedx_sso_security_manager import OpenEdxSsoSecurityManager, can_view_courses
+from openedx_sso_security_manager import OpenEdxSsoSecurityManager
 CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 
 
@@ -79,6 +79,7 @@ FEATURE_FLAGS = {
 }
 
 # Add this custom template processor which returns the list of courses the current user can access
+from openedx_jinja_filters import can_view_courses
 JINJA_CONTEXT_ADDONS = {
-    'can_view_courses': can_view_courses
+    'can_view_courses': can_view_courses,
 }
