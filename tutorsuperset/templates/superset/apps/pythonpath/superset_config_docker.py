@@ -76,6 +76,9 @@ CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 FEATURE_FLAGS = {
     "ALERT_REPORTS": True,
     "ENABLE_TEMPLATE_PROCESSING": True,
+    # Can't enable this until we can add roles to dashboards
+    # cf https://github.com/opus-42/superset-api-client/pull/31
+    #"DASHBOARD_RBAC": True,
 }
 
 # Add this custom template processor which returns the list of courses the current user can access

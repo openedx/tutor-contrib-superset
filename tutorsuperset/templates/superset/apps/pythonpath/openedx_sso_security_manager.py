@@ -125,7 +125,9 @@ UserAccess = namedtuple(
 def _fetch_openedx_user_access(username):
     """
     Fetches the given user's access details from the Open edX User database
-    (since Open edX doesn't have an API for this).
+
+    NOTE: Open edX JWT seems to provide this info with the "profile" scope.
+    How do we access this via the AllAuth OAuth2?
     """
     cxn = _connect_openedx_db()
     cursor = cxn.cursor()
