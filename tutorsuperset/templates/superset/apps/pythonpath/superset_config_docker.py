@@ -64,7 +64,7 @@ AUTH_ROLES_MAPPING = {
     "admin": ["Admin"],      # Superusers
     "alpha": ["Alpha"],      # Global staff
     "gamma": ["Gamma"],      # Course staff
-    "openedx": ["Open edX"], # Open edX datastore, manually created
+    "openedx": ["{{SUPERSET_OPENEDX_ROLE_NAME}}"], # All Open edX users
     "public": ["Public"],    # AKA anonymous users
 }
 

@@ -3964,7 +3964,7 @@
     ]
   },
   {
-    "name":"Open edX",
+    "name":"{{SUPERSET_OPENEDX_ROLE_NAME}}",
     "permissions":[
       {
         "permission":{
