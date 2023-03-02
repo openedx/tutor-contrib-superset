@@ -195,7 +195,7 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-services",
         f"""
-superset-app:
+superset:
   {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
@@ -227,7 +227,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 superset-job:
   {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   depends_on:
-    - superset-app
+    - superset
         """
     )
 )
@@ -248,7 +248,7 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-dev-services",
         f"""
-superset-app:
+superset:
   {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
@@ -280,7 +280,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 superset-job:
   {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
   depends_on:
-    - superset-app
+    - superset
         """
     )
 )
