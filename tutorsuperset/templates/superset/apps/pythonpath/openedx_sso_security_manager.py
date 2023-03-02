@@ -26,15 +26,12 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
             oauth_remote = self.appbuilder.sm.oauth_remotes[provider]
             username_url = openedx_apis['get_username']
             me = oauth_remote.get(username_url).json()
-            logging.debug(f"{username_url}: {me}")
             username = me['username']
 
             user_profile_url = openedx_apis['get_profile'].format(username=username)
             user_profile = oauth_remote.get(user_profile_url).json()
-            logging.debug(f"{user_profile_url}: {user_profile}")
 
             user_roles = self._get_user_roles(username)
-            logging.debug(f"user_roles: {user_roles}")
 
             return {
                 'name': user_profile['name'],
@@ -67,8 +64,6 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         Returns the Superset roles that should be associated with the given user.
         """
         user_access = _fetch_openedx_user_access(username)
-        logging.debug(f"user access: {user_access}")
-
         if user_access.is_superuser:
             return ["admin", "alpha", "openedx"]
         elif user_access.is_staff:
@@ -113,7 +108,6 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
             for course_id in next_courses:
                 courses.append(course_id)
 
-        logging.debug(f"{username} has {permission} access to {courses}")
         return courses
 
 

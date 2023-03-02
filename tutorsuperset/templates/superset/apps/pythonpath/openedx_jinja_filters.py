@@ -3,7 +3,6 @@ Custom Jinja template filters that can be used in Superset queries.
 
 cf https://superset.apache.org/docs/installation/sql-templating/
 """
-import logging
 from superset.extensions import security_manager
 
 
@@ -19,7 +18,6 @@ def can_view_courses(username, field_name='course_id'):
         user_roles = security_manager.get_user_roles(user)
     else:
         user_roles = []
-    logging.debug(f"can_view_courses: {username} roles: {user_roles}")
 
     # Users with no roles don't get to see any courses
     if not user_roles:
@@ -31,7 +29,6 @@ def can_view_courses(username, field_name='course_id'):
 
     # Everyone else only has access if they're staff on a course.
     courses = security_manager.get_courses(username)
-    logging.debug(f"{username} is course staff on {courses}")
 
     # TODO: what happens when the list of courses grows beyond what the query will handle?
     if courses:
