@@ -24,8 +24,9 @@ def can_view_courses(username, field_name='course_id'):
         return NO_COURSES
 
     # Superusers and global staff have access to all courses
-    if ("Admin" in user_roles) or ("Alpha" in user_roles):
-        return ALL_COURSES
+    for role in user_roles:
+        if str(role) == "Admin" or str(role) == "Alpha":
+            return ALL_COURSES
 
     # Everyone else only has access if they're staff on a course.
     courses = security_manager.get_courses(username)
