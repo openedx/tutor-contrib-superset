@@ -64,11 +64,11 @@ AUTH_ROLES_MAPPING = {
     "admin": ["Admin"],      # Superusers
     "alpha": ["Alpha"],      # Global staff
     "gamma": ["Gamma"],      # Course staff
-    "openedx": ["Open edX"], # Open edX datastore, manually created
+    "openedx": ["{{SUPERSET_OPENEDX_ROLE_NAME}}"], # All Open edX users
     "public": ["Public"],    # AKA anonymous users
 }
 
-from openedx_sso_security_manager import OpenEdxSsoSecurityManager, can_view_courses
+from openedx_sso_security_manager import OpenEdxSsoSecurityManager
 CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 
 
@@ -76,9 +76,13 @@ CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 FEATURE_FLAGS = {
     "ALERT_REPORTS": True,
     "ENABLE_TEMPLATE_PROCESSING": True,
+    # Can't enable this until we can add roles to dashboards
+    # cf https://github.com/opus-42/superset-api-client/pull/31
+    #"DASHBOARD_RBAC": True,
 }
 
 # Add this custom template processor which returns the list of courses the current user can access
+from openedx_jinja_filters import can_view_courses
 JINJA_CONTEXT_ADDONS = {
-    'can_view_courses': can_view_courses
+    'can_view_courses': can_view_courses,
 }

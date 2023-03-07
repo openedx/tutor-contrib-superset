@@ -30,6 +30,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_OPENEDX_USERNAME_PATH", "/api/user/v1/me"),
         ("SUPERSET_OPENEDX_USER_PROFILE_PATH", "/api/user/v1/accounts/{username}"),
         ("SUPERSET_OPENEDX_COURSES_LIST_PATH", "/api/courses/v1/courses/?permissions={permission}&username={username}"),
+        ("SUPERSET_OPENEDX_ROLE_NAME", "Open edX"),
     ]
 )
 
@@ -144,6 +145,7 @@ SUPERSET_DOCKER_COMPOSE_COMMON = """image: apache/superset:{{ SUPERSET_TAG }}
   volumes:
     - ../../env/plugins/superset/apps/docker:/app/docker
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
+    - ../../env/plugins/superset/apps/data:/app/data
     - ../../env/plugins/superset/apps/superset_home:/app/superset_home
   restart: unless-stopped
   environment:
@@ -193,7 +195,7 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-services",
         f"""
-superset-app:
+superset:
   {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
@@ -225,7 +227,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 superset-job:
   {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
   depends_on:
-    - superset-app
+    - superset
         """
     )
 )
@@ -246,7 +248,7 @@ hooks.Filters.ENV_PATCHES.add_item(
     (
         "local-docker-compose-dev-services",
         f"""
-superset-app:
+superset:
   {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
   command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
   ports:
@@ -278,7 +280,7 @@ hooks.Filters.ENV_PATCHES.add_item(
 superset-job:
   {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
   depends_on:
-    - superset-app
+    - superset
         """
     )
 )
