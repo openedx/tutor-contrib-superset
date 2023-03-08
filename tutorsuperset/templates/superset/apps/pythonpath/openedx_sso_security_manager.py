@@ -65,7 +65,7 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         """
         user_access = _fetch_openedx_user_access(username)
         if user_access.is_superuser:
-            return ["admin", "alpha", "openedx"]
+            return ["admin", "openedx"]
         elif user_access.is_staff:
             return ["alpha", "openedx"]
         else:
