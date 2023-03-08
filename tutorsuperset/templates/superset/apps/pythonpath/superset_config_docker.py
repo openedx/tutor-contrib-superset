@@ -6,6 +6,10 @@ from flask_appbuilder.security.manager import AUTH_OAUTH
 
 SECRET_KEY = os.environ["SECRET_KEY"]
 
+# Don't limit the number of rows that can be used in queries
+ROW_LIMIT = int({{ SUPERSET_ROW_LIMIT }})
+SQL_MAX_ROW = ROW_LIMIT
+
 # Credentials for connecting to the Open edX MySQL database
 OPENEDX_DATABASE = {
     'host': os.environ["OPENEDX_MYSQL_HOST"],
