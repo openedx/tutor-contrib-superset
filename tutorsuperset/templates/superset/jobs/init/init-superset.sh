@@ -45,10 +45,26 @@ EOF
 # Initialize the database
 echo_step "1" "Starting" "Applying DB migrations"
 superset db upgrade
+superset init
 echo_step "1" "Complete" "Applying DB migrations"
 
+# Create an admin user
+echo_step "2" "Starting" "Setting up admin user"
+superset fab create-admin \
+  --username "{{ SUPERSET_ADMIN_USERNAME }}" \
+  --password "{{ SUPERSET_ADMIN_PASSWORD }}" \
+  --firstname Superset \
+  --lastname Admin \
+  --email "{{ SUPERSET_ADMIN_EMAIL }}"
+
+# Update the password of the Admin user
+# (in case it changed since the user was created)
+superset fab reset-password \
+  --username "{{ SUPERSET_ADMIN_USERNAME }}" \
+  --password "{{ SUPERSET_ADMIN_PASSWORD }}"
+echo_step "2" "Complete" "Setting up admin user"
+
 # Create default roles and permissions
-echo_step "2" "Starting" "Setting up roles and perms"
-superset init
+echo_step "3" "Starting" "Setting up roles and perms"
 superset fab import-roles -p /app/data/roles.json
-echo_step "2" "Complete" "Setting up roles and perms"
+echo_step "3" "Complete" "Setting up roles and perms"
