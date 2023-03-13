@@ -31,6 +31,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_OPENEDX_USER_PROFILE_PATH", "/api/user/v1/accounts/{username}"),
         ("SUPERSET_OPENEDX_COURSES_LIST_PATH", "/api/courses/v1/courses/?permissions={permission}&username={username}"),
         ("SUPERSET_OPENEDX_ROLE_NAME", "Open edX"),
+        ("SUPERSET_ADMIN_EMAIL", "admin@openedx.org"),
         # Set to 0 to have no row limit.
         ("SUPERSET_ROW_LIMIT", 100_000),
     ]
@@ -47,6 +48,8 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         ("SUPERSET_DB_PASSWORD", "{{ 24|random_string }}"),
         ("SUPERSET_OAUTH2_CLIENT_ID", "{{ 16|random_string }}"),
         ("SUPERSET_OAUTH2_CLIENT_SECRET", "{{ 16|random_string }}"),
+        ("SUPERSET_ADMIN_USERNAME", "{{ 12|random_string }}"),
+        ("SUPERSET_ADMIN_PASSWORD", "{{ 24|random_string }}"),
     ]
 )
 
