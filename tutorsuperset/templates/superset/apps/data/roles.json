@@ -3214,6 +3214,14 @@
       },
       {
         "permission":{
+          "name":"all_datasource_access"
+        },
+        "view_menu":{
+          "name":"all_datasource_access"
+        }
+      },
+      {
+        "permission":{
           "name":"can_get"
         },
         "view_menu":{
