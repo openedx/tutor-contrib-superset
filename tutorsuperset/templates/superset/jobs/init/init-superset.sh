@@ -27,7 +27,7 @@ set -e
 #
 /usr/bin/env bash /app/docker/docker-bootstrap.sh
 
-STEP_CNT=2
+STEP_CNT=3
 
 echo_step() {
 cat <<EOF
