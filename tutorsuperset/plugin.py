@@ -18,7 +18,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         # Prefix your setting names with 'SUPERSET_'.
         ("SUPERSET_VERSION", __version__),
         ("SUPERSET_TAG", "2.0.1"),
-        ("SUPERSET_HOST", "{{ LMS_HOST }}"),
+        ("SUPERSET_HOST", "superset.{{ LMS_HOST }}"),
         ("SUPERSET_PORT", "8088"),
         ("SUPERSET_DB_DIALECT", "mysql"),
         ("SUPERSET_DB_HOST", "{{ MYSQL_HOST }}"),

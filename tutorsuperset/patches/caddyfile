@@ -1,0 +1,7 @@
+# Superset
+{{ SUPERSET_HOST }}{$default_site_port} {
+    request_body {
+        max_size 50MB
+    }
+    import proxy "superset:8088"
+}
