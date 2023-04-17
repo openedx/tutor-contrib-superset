@@ -36,7 +36,7 @@ Usage
 
 Connect to Superset's UI on the configured port (default is `:8088`):
 
-  http://local.overhang.io:8088
+  http://superset.local.overhang.io:8088
 
 
 Access and Permissions
