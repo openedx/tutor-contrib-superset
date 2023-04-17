@@ -1,8 +1,5 @@
 image: apache/superset:{{ SUPERSET_TAG }}
   user: root
-  depends_on:
-    - mysql
-    - redis
   volumes:
     - ../../env/plugins/superset/apps/docker:/app/docker
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
