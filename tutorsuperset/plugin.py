@@ -183,16 +183,6 @@ SUPERSET_DOCKER_COMPOSE_COMMON = """image: apache/superset:{{ SUPERSET_TAG }}
     OPENEDX_USER_PROFILE_PATH: "{{ SUPERSET_OPENEDX_USER_PROFILE_PATH }}"
     OPENEDX_COURSES_LIST_PATH: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}" """
 
-########################################
-# LOCAL services
-# Run with `tutor local ...`
-########################################
-
-# OPENEDX_LMS_ROOT_URL for local runs on default port (:80 for http, :443 for https)
-SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL = (
-    SUPERSET_DOCKER_COMPOSE_COMMON +
-    '\n    OPENEDX_LMS_ROOT_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"'
-)
 
 ########################################
 # DEV services
@@ -203,35 +193,6 @@ SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL = (
 SUPERSET_DOCKER_COMPOSE_COMMON_DEV = (
     SUPERSET_DOCKER_COMPOSE_COMMON +
     '\n    OPENEDX_LMS_ROOT_URL: "http://{{ LMS_HOST }}:8000"'
-)
-
-# Modified from https://github.com/apache/superset/blob/969c963/docker-compose-non-dev.yml
-hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "local-docker-compose-dev-services",
-        f"""
-superset:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
-  ports:
-    - 8088:{{{{ SUPERSET_PORT }}}}
-  depends_on:
-    - superset-worker
-    - superset-worker-beat
-
-superset-worker:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
-  healthcheck:
-    test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
-
-superset-worker-beat:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_DEV}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
-  healthcheck:
-    disable: true
-        """
-    )
 )
 
 # Initialization jobs
