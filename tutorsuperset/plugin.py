@@ -196,34 +196,6 @@ SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL = (
 
 # Modified from https://github.com/apache/superset/blob/969c963/docker-compose-non-dev.yml
 
-hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "local-docker-compose-services",
-        f"""
-superset:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
-  ports:
-    - 8088:{{{{ SUPERSET_PORT }}}}
-  depends_on:
-    - superset-worker
-    - superset-worker-beat
-
-superset-worker:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
-  healthcheck:
-    test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
-
-superset-worker-beat:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
-  command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
-  healthcheck:
-    disable: true
-        """
-    )
-)
-
 # Initialization jobs
 hooks.Filters.ENV_PATCHES.add_item(
     (
