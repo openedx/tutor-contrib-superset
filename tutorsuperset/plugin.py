@@ -194,21 +194,6 @@ SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL = (
     '\n    OPENEDX_LMS_ROOT_URL: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"'
 )
 
-# Modified from https://github.com/apache/superset/blob/969c963/docker-compose-non-dev.yml
-
-# Initialization jobs
-hooks.Filters.ENV_PATCHES.add_item(
-    (
-        "local-docker-compose-jobs-services",
-        f"""
-superset-job:
-  {SUPERSET_DOCKER_COMPOSE_COMMON_LOCAL}
-  depends_on:
-    - superset
-        """
-    )
-)
-
 ########################################
 # DEV services
 # Run with `tutor dev ...`
