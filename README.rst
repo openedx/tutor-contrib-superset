@@ -15,6 +15,12 @@ Installation
 
     pip install git+https://github.com/openedx/tutor-contrib-superset
 
+
+Compatibility
+-------------
+
+This plugin is compatible with Tutor 15.0.0 and later.
+
 Usage
 -----
 
@@ -30,7 +36,7 @@ Usage
 
 Connect to Superset's UI on the configured port (default is `:8088`):
 
-  http://local.overhang.io:8088
+  http://superset.local.overhang.io:8088
 
 
 Access and Permissions
