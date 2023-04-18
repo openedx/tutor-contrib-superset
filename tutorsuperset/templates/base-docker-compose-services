@@ -1,0 +1,40 @@
+image: apache/superset:{{ SUPERSET_TAG }}
+  user: root
+  depends_on:
+    - mysql
+    - redis
+  volumes:
+    - ../../env/plugins/superset/apps/docker:/app/docker
+    - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
+    - ../../env/plugins/superset/apps/data:/app/data
+    - ../../env/plugins/superset/apps/superset_home:/app/superset_home
+  restart: unless-stopped
+  environment:
+    DATABASE_DIALECT: {{ SUPERSET_DB_DIALECT }}
+    DATABASE_HOST: {{ SUPERSET_DB_HOST }}
+    DATABASE_PORT: {{ SUPERSET_DB_PORT }}
+    DATABASE_DB: {{ SUPERSET_DB_NAME }}
+    DATABASE_HOST: {{ SUPERSET_DB_HOST }}
+    DATABASE_PASSWORD: {{ SUPERSET_DB_PASSWORD }}
+    DATABASE_USER: {{ SUPERSET_DB_USERNAME }}
+    OPENEDX_MYSQL_HOST: {{ MYSQL_HOST }}
+    OPENEDX_MYSQL_PORT: {{ MYSQL_PORT }}
+    OPENEDX_MYSQL_DATABASE: {{ OPENEDX_MYSQL_DATABASE }}
+    OPENEDX_MYSQL_USERNAME: {{ OPENEDX_MYSQL_USERNAME }}
+    OPENEDX_MYSQL_PASSWORD: {{ OPENEDX_MYSQL_PASSWORD }}
+    OAUTH2_CLIENT_ID: {{ SUPERSET_OAUTH2_CLIENT_ID }}
+    OAUTH2_CLIENT_SECRET: {{ SUPERSET_OAUTH2_CLIENT_SECRET }}
+    SECRET_KEY: {{ SUPERSET_SECRET_KEY }}
+    PYTHONPATH: /app/pythonpath:/app/docker/pythonpath_dev
+    REDIS_HOST: {{ REDIS_HOST }}
+    REDIS_PORT: {{ REDIS_PORT }}
+    REDIS_PASSWORD: {{ REDIS_PASSWORD }}
+    FLASK_ENV: production
+    SUPERSET_ENV: production
+    SUPERSET_HOST: {{ SUPERSET_HOST }}
+    SUPERSET_PORT: {{ SUPERSET_PORT }}
+    OAUTH2_ACCESS_TOKEN_PATH: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
+    OAUTH2_AUTHORIZE_PATH: "{{ SUPERSET_OAUTH2_AUTHORIZE_PATH }}"
+    OPENEDX_USERNAME_PATH: "{{ SUPERSET_OPENEDX_USERNAME_PATH }}"
+    OPENEDX_USER_PROFILE_PATH: "{{ SUPERSET_OPENEDX_USER_PROFILE_PATH }}"
+    OPENEDX_COURSES_LIST_PATH: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}"

@@ -1,0 +1,5 @@
+superset-job:
+  {% include 'base-docker-compose-services' %}
+    OPENEDX_LMS_ROOT_URL: "http://{{ LMS_HOST }}:8000"
+  depends_on:
+    - superset
