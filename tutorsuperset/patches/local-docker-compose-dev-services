@@ -5,6 +5,8 @@ superset:
   ports:
     - 8088:{{ SUPERSET_PORT }}
   depends_on:
+    - mysql
+    - redis
     - superset-worker
     - superset-worker-beat
 
@@ -14,6 +16,9 @@ superset-worker:
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
+  depends_on:
+    - mysql
+    - redis
 
 superset-worker-beat:
   {% include 'base-docker-compose-services' %}
@@ -21,3 +26,7 @@ superset-worker-beat:
   command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
   healthcheck:
     disable: true
+  depends_on:
+    - mysql
+    - redis
+

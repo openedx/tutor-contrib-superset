@@ -1,8 +1,5 @@
 image: apache/superset:{{ SUPERSET_TAG }}
   user: root
-  depends_on:
-    - mysql
-    - redis
   volumes:
     - ../../env/plugins/superset/apps/docker:/app/docker
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
@@ -14,7 +11,6 @@ image: apache/superset:{{ SUPERSET_TAG }}
     DATABASE_HOST: {{ SUPERSET_DB_HOST }}
     DATABASE_PORT: {{ SUPERSET_DB_PORT }}
     DATABASE_DB: {{ SUPERSET_DB_NAME }}
-    DATABASE_HOST: {{ SUPERSET_DB_HOST }}
     DATABASE_PASSWORD: {{ SUPERSET_DB_PASSWORD }}
     DATABASE_USER: {{ SUPERSET_DB_USERNAME }}
     OPENEDX_MYSQL_HOST: {{ MYSQL_HOST }}
