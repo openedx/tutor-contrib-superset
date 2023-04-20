@@ -2,6 +2,9 @@
   files:
     - plugins/superset/apps/docker/docker-bootstrap.sh
     - plugins/superset/apps/docker/requirements-local.txt
+  options:
+    labels:
+        app.kubernetes.io/name: superset
 
 - name: superset-pythonpath
   files:
@@ -9,7 +12,13 @@
     - plugins/superset/apps/pythonpath/openedx_sso_security_manager.py
     - plugins/superset/apps/pythonpath/superset_config_docker.py
     - plugins/superset/apps/pythonpath/superset_config.py
+  options:
+    labels:
+        app.kubernetes.io/name: superset
 
 - name: superset-data
   files:
     - plugins/superset/apps/data/roles.json
+  options:
+    labels:
+        app.kubernetes.io/name: superset
