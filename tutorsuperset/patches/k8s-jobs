@@ -14,49 +14,49 @@ spec:
         image: apache/superset:{{ SUPERSET_TAG }}
         env:
           - name: DATABASE_DIALECT
-            value: {{ SUPERSET_DB_DIALECT }}
+            value: "{{ SUPERSET_DB_DIALECT }}"
           - name: DATABASE_HOST 
-            value: {{ SUPERSET_DB_HOST }}
+            value: "{{ SUPERSET_DB_HOST }}"
           - name: DATABASE_PORT
-            value: {{ SUPERSET_DB_PORT }}
+            value: "{{ SUPERSET_DB_PORT }}"
           - name: DATABASE_DB
-            value: {{ SUPERSET_DB_NAME }}
+            value: "{{ SUPERSET_DB_NAME }}"
           - name: DATABASE_PASSWORD
-            value: {{ SUPERSET_DB_PASSWORD }}
+            value: "{{ SUPERSET_DB_PASSWORD }}"
           - name: DATABASE_USER
-            value: {{ SUPERSET_DB_USERNAME }}
+            value: "{{ SUPERSET_DB_USERNAME }}"
           - name: OPENEDX_MYSQL_HOST
-            value: {{ MYSQL_HOST }}
+            value: "{{ MYSQL_HOST }}"
           - name: OPENEDX_MYSQL_PORT
-            value: {{ MYSQL_PORT }}
+            value: "{{ MYSQL_PORT }}"
           - name: OPENEDX_MYSQL_DATABASE
-            value: {{ OPENEDX_MYSQL_DATABASE }}
+            value: "{{ OPENEDX_MYSQL_DATABASE }}"
           - name: OPENEDX_MYSQL_USERNAME
-            value: {{ OPENEDX_MYSQL_USERNAME }}
+            value: "{{ OPENEDX_MYSQL_USERNAME }}"
           - name: OPENEDX_MYSQL_PASSWORD
-            value: {{ OPENEDX_MYSQL_PASSWORD }}
+            value: "{{ OPENEDX_MYSQL_PASSWORD }}"
           - name: OAUTH2_CLIENT_ID
-            value: {{ SUPERSET_OAUTH2_CLIENT_ID }}
+            value: "{{ SUPERSET_OAUTH2_CLIENT_ID }}"
           - name: OAUTH2_CLIENT_SECRET
-            value: {{ SUPERSET_OAUTH2_CLIENT_SECRET }}
+            value: "{{ SUPERSET_OAUTH2_CLIENT_SECRET }}"
           - name: SECRET_KEY
-            value: {{ SUPERSET_SECRET_KEY }}
+            value: "{{ SUPERSET_SECRET_KEY }}"
           - name: PYTHONPATH
-            value: /app/pythonpath:/app/docker/pythonpath_dev
+            value: "/app/pythonpath:/app/docker/pythonpath_dev"
           - name: REDIS_HOST
-            value: {{ REDIS_HOST }}
+            value: "{{ REDIS_HOST }}"
           - name: REDIS_PORT
-            value: {{ REDIS_PORT }}
+            value: "{{ REDIS_PORT }}"
           - name: REDIS_PASSWORD
-            value: {{ REDIS_PASSWORD }}
+            value: "{{ REDIS_PASSWORD }}"
           - name: FLASK_ENV
-            value: production
+            value: "production"
           - name: SUPERSET_ENV
-            value: production
+            value: "production"
           - name: SUPERSET_HOST
-            value: {{ SUPERSET_HOST }}
+            value: "{{ SUPERSET_HOST }}"
           - name: SUPERSET_PORT
-            value: {{ SUPERSET_PORT }}
+            value: "{{ SUPERSET_PORT }}"
           - name: OAUTH2_ACCESS_TOKEN_PATH
             value: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
           - name: OAUTH2_AUTHORIZE_PATH
@@ -103,49 +103,49 @@ spec:
         image: apache/superset:{{ SUPERSET_TAG }}
         env:
           - name: DATABASE_DIALECT
-            value: {{ SUPERSET_DB_DIALECT }}
+            value: "{{ SUPERSET_DB_DIALECT }}"
           - name: DATABASE_HOST 
-            value: {{ SUPERSET_DB_HOST }}
+            value: "{{ SUPERSET_DB_HOST }}"
           - name: DATABASE_PORT
-            value: {{ SUPERSET_DB_PORT }}
+            value: "{{ SUPERSET_DB_PORT }}"
           - name: DATABASE_DB
-            value: {{ SUPERSET_DB_NAME }}
+            value: "{{ SUPERSET_DB_NAME }}"
           - name: DATABASE_PASSWORD
-            value: {{ SUPERSET_DB_PASSWORD }}
+            value: "{{ SUPERSET_DB_PASSWORD }}"
           - name: DATABASE_USER
-            value: {{ SUPERSET_DB_USERNAME }}
+            value: "{{ SUPERSET_DB_USERNAME }}"
           - name: OPENEDX_MYSQL_HOST
-            value: {{ MYSQL_HOST }}
+            value: "{{ MYSQL_HOST }}"
           - name: OPENEDX_MYSQL_PORT
-            value: {{ MYSQL_PORT }}
+            value: "{{ MYSQL_PORT }}"
           - name: OPENEDX_MYSQL_DATABASE
-            value: {{ OPENEDX_MYSQL_DATABASE }}
+            value: "{{ OPENEDX_MYSQL_DATABASE }}"
           - name: OPENEDX_MYSQL_USERNAME
-            value: {{ OPENEDX_MYSQL_USERNAME }}
+            value: "{{ OPENEDX_MYSQL_USERNAME }}"
           - name: OPENEDX_MYSQL_PASSWORD
-            value: {{ OPENEDX_MYSQL_PASSWORD }}
+            value: "{{ OPENEDX_MYSQL_PASSWORD }}"
           - name: OAUTH2_CLIENT_ID
-            value: {{ SUPERSET_OAUTH2_CLIENT_ID }}
+            value: "{{ SUPERSET_OAUTH2_CLIENT_ID }}"
           - name: OAUTH2_CLIENT_SECRET
-            value: {{ SUPERSET_OAUTH2_CLIENT_SECRET }}
+            value: "{{ SUPERSET_OAUTH2_CLIENT_SECRET }}"
           - name: SECRET_KEY
-            value: {{ SUPERSET_SECRET_KEY }}
+            value: "{{ SUPERSET_SECRET_KEY }}"
           - name: PYTHONPATH
-            value: /app/pythonpath:/app/docker/pythonpath_dev
+            value: "/app/pythonpath:/app/docker/pythonpath_dev"
           - name: REDIS_HOST
-            value: {{ REDIS_HOST }}
+            value: "{{ REDIS_HOST }}"
           - name: REDIS_PORT
-            value: {{ REDIS_PORT }}
+            value: "{{ REDIS_PORT }}"
           - name: REDIS_PASSWORD
-            value: {{ REDIS_PASSWORD }}
+            value: "{{ REDIS_PASSWORD }}"
           - name: FLASK_ENV
-            value: production
+            value: "production"
           - name: SUPERSET_ENV
-            value: production
+            value: "production"
           - name: SUPERSET_HOST
-            value: {{ SUPERSET_HOST }}
+            value: "{{ SUPERSET_HOST }}"
           - name: SUPERSET_PORT
-            value: {{ SUPERSET_PORT }}
+            value: "{{ SUPERSET_PORT }}"
           - name: OAUTH2_ACCESS_TOKEN_PATH
             value: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
           - name: OAUTH2_AUTHORIZE_PATH
