@@ -12,18 +12,3 @@ spec:
       protocol: TCP
   selector:
     app.kubernetes.io/name: superset
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: superset-worker
-  labels:
-    app.kubernetes.io/name: superset-worker
-spec:
-  type: ClusterIP
-  ports:
-    - port: {{ SUPERSET_PORT }}
-      protocol: TCP
-  selector:
-    app.kubernetes.io/name: superset-worker
