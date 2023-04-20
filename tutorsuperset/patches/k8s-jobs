@@ -76,7 +76,6 @@ spec:
               name: pythonpath
             - mountPath: /app/data
               name: data
-        restartPolicy: Always
       volumes:
         - name: docker
           configMap:
@@ -166,7 +165,6 @@ spec:
               name: pythonpath
             - mountPath: /app/data
               name: data
-        restartPolicy: Always
       volumes:
         - name: docker
           configMap:
