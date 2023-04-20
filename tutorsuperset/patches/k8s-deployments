@@ -17,8 +17,10 @@ spec:
         app.kubernetes.io/name: superset
     spec:
       containers:
-        - name: superset
-          image: apache/superset:{{ SUPERSET_TAG }}
+        - args:
+            - bash
+            - /app/docker/docker-bootstrap.sh
+            - app-gunicorn
           env:
             - name: DATABASE_DIALECT
               value: {{ SUPERSET_DB_DIALECT }}
@@ -76,9 +78,28 @@ spec:
               value: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}"
             - name: OPENEDX_LMS_ROOT_URL
               value: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"
-          command: ["bash", "/app/docker/docker-bootstrap.sh", "app-gunicorn"]
+          image: apache/superset:{{ SUPERSET_TAG }}
+          name: superset
           ports:
             - containerPort: {{ SUPERSET_PORT }}
+          volumeMounts:
+            - mountPath: /app/docker
+              name: docker
+            - mountPath: /app/pythonpath
+              name: pythonpath
+            - mountPath: /app/data
+              name: data
+      restartPolicy: Always
+      volumes:
+        - name: docker
+          configMap:
+            name: superset-docker
+        - name: pythonpath
+          configMap:
+            name: superset-pythonpath
+        - name: data
+          configMap:
+            name: superset-data
 
 ---
 apiVersion: apps/v1
@@ -99,8 +120,10 @@ spec:
         app.kubernetes.io/name: superset-worker
     spec:
       containers:
-        - name: superset-worker
-          image: apache/superset:{{ SUPERSET_TAG }}
+        - args:
+            - bash
+            - /app/docker/docker-bootstrap.sh
+            - worker
           env:
             - name: DATABASE_DIALECT
               value: {{ SUPERSET_DB_DIALECT }}
@@ -158,6 +181,29 @@ spec:
               value: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}"
             - name: OPENEDX_LMS_ROOT_URL
               value: "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ LMS_HOST }}"
-          command: ["bash", "/app/docker/docker-bootstrap.sh", "worker"]
+          image: apache/superset:{{ SUPERSET_TAG }}
+          livenessProbe:
+            exec:
+              command:
+                - celery inspect ping -A superset.tasks.celery_app:app -d celery@$HOSTNAME
+          name: superset-worker
           ports:
             - containerPort: {{ SUPERSET_PORT }}
+          volumeMounts:
+            - mountPath: /app/docker
+              name: docker
+            - mountPath: /app/pythonpath
+              name: pythonpath
+            - mountPath: /app/data
+              name: data
+      restartPolicy: Always
+      volumes:
+        - name: docker
+          configMap:
+            name: superset-docker
+        - name: pythonpath
+          configMap:
+            name: superset-pythonpath
+        - name: data
+          configMap:
+            name: superset-data

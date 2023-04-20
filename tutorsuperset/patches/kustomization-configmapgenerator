@@ -1,0 +1,15 @@
+- name: superset-docker
+  files:
+    - plugins/superset/apps/docker/docker-bootstrap.sh
+    - plugins/superset/apps/docker/requirements-local.txt
+
+- name: superset-pythonpath
+  files:
+    - plugins/superset/apps/pythonpath/openedx_jinja_filters.py
+    - plugins/superset/apps/pythonpath/openedx_sso_security_manager.py
+    - plugins/superset/apps/pythonpath/superset_config_docker.py
+    - plugins/superset/apps/pythonpath/superset_config.py
+
+- name: superset-data
+  files:
+    - plugins/superset/apps/data/roles.json
