@@ -34,14 +34,14 @@ OAUTH_PROVIDERS = [
         'token_key':'access_token', # Name of the token in the response of access_token_url
         'icon':'fa-address-card',   # Icon for the provider
         'remote_app': {
-            'client_id': os.environ["OAUTH2_CLIENT_ID"],
-            'client_secret': os.environ["OAUTH2_CLIENT_SECRET"],
+            'client_id': os.environ["SSO_CLIENT_ID"],
+            'client_secret': os.environ["SSO_CLIENT_SECRET"],
             'client_kwargs':{
                 'scope': 'read'               # Scope for the Authorization
             },
             'access_token_method':'POST',    # HTTP Method to call access_token_url
             'access_token_params':{        # Additional parameters for calls to access_token_url
-                'client_id': os.environ["OAUTH2_CLIENT_ID"],
+                'client_id': os.environ["SSO_CLIENT_ID"],
             },
             'access_token_headers':{    # Additional headers for calls to access_token_url
                 'Authorization': 'Basic Base64EncodedClientIdAndSecret'
