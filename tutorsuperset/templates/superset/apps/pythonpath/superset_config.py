@@ -30,7 +30,7 @@ import os
 from datetime import timedelta
 from typing import Optional
 
-from cachelib.file import FileSystemCache
+from cachelib.redis import RedisCache
 from celery.schedules import crontab
 
 from superset.superset_typing import CacheConfig
@@ -49,6 +49,7 @@ def get_env_variable(var_name: str, default: Optional[str] = None) -> str:
             )
             raise EnvironmentError(error_msg)
 
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 DATABASE_DIALECT = get_env_variable("DATABASE_DIALECT")
 DATABASE_USER = get_env_variable("DATABASE_USER")
@@ -71,8 +72,9 @@ REDIS_HOST = get_env_variable("REDIS_HOST")
 REDIS_PORT = get_env_variable("REDIS_PORT")
 REDIS_CELERY_DB = get_env_variable("REDIS_CELERY_DB", "0")
 REDIS_RESULTS_DB = get_env_variable("REDIS_RESULTS_DB", "1")
+REDIS_PASSWORD = get_env_variable("REDIS_PASSWORD", "")
 
-RESULTS_BACKEND = FileSystemCache("/app/superset_home/sqllab")
+RESULTS_BACKEND = RedisCache(host=REDIS_HOST, port=REDIS_PORT, password=REDIS_PASSWORD, db=REDIS_RESULTS_DB, key_prefix='superset_results')
 
 CACHE_CONFIG = {
     "CACHE_TYPE": "redis",
@@ -80,6 +82,7 @@ CACHE_CONFIG = {
     "CACHE_KEY_PREFIX": "superset_",
     "CACHE_REDIS_HOST": REDIS_HOST,
     "CACHE_REDIS_PORT": REDIS_PORT,
+    'CACHE_REDIS_PASSWORD': REDIS_PASSWORD,
     "CACHE_REDIS_DB": REDIS_RESULTS_DB,
 }
 DATA_CACHE_CONFIG = CACHE_CONFIG
