@@ -7,8 +7,7 @@ from flask import current_app, session
 from superset.security import SupersetSecurityManager
 from superset.utils.memoized import memoized
 
-
-from authlib.jose import jwt
+import jwt
 
 import requests
 import os
@@ -156,11 +155,11 @@ def _fetch_openedx_user_access(username, jwt_token):
     How do we access this via the AllAuth OAuth2?
     """
 
-    claims = jwt.decode(jwt_token, '')
-
+    decoded_access_token = jwt.decode(jwt_token, algorithms=["HS256"], options={"verify_signature": False})
+    print(decoded_access_token)
     user_access = UserAccess(
         username=username,
-        is_superuser=claims["superuser"],
-        is_staff=claims["administrator"]
+        is_superuser=decoded_access_token["superuser"],
+        is_staff=decoded_access_token["administrator"]
     )
     return user_access
