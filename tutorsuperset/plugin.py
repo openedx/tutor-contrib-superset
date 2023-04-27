@@ -37,6 +37,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_ADMIN_EMAIL", "admin@openedx.org"),
         # Set to 0 to have no row limit.
         ("SUPERSET_ROW_LIMIT", 100_000),
+        ("SUPERSET_SENTRY_DSN", ""),
     ]
 )
 
