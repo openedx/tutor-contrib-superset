@@ -1,12 +1,17 @@
 from collections import namedtuple
+import jwt
 import logging
-import MySQLdb
 
 from flask import current_app, session
 from flask import request
 
 from superset.security import SupersetSecurityManager
 from superset.utils.memoized import memoized
+
+
+UserAccess = namedtuple(
+    "UserAccess", ["username", "is_superuser", "is_staff"]
+)
 
 
 class OpenEdxSsoSecurityManager(SupersetSecurityManager):
@@ -31,8 +36,6 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
 
             user_profile_url = openedx_apis['get_profile'].format(username=username)
             user_profile = oauth_remote.get(user_profile_url).json()
-            cookies = request.cookies
-            print(cookies)
             user_roles = self._get_user_roles(username)
 
             return {
@@ -61,11 +64,35 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         """
         return self.get_oauth_token().get('access_token')
 
+    @property
+    def openedx_jwt_cookie_decoded(self):
+        """
+        Retrieves the jwt token from the session.
+        """
+        header_payload_cookie_name = current_app.config["OPENEDX_JWT_HEADER_PAYLOAD_COOKIE"]
+        signature_cookie_name = current_app.config["OPENEDX_JWT_SIGNATURE_COOKIE"]
+        header_payload_cookie = request.cookies.get(header_payload_cookie_name, {})
+        signature_cookie = request.cookies.get(signature_cookie_name, {})
+
+        return jwt.decode(
+            f"{header_payload_cookie}.{signature_cookie}",
+            algorithms=["RS512"],
+            options={
+                "verify_signature": False,
+            }
+        )
+
     def _get_user_roles(self, username):
         """
         Returns the Superset roles that should be associated with the given user.
         """
-        user_access = _fetch_openedx_user_access(username)
+        jwt_cookie_decoded = self.openedx_jwt_cookie_decoded
+        user_access = UserAccess(
+            username=username,
+            is_superuser=jwt_cookie_decoded["superuser"],
+            is_staff=jwt_cookie_decoded["administrator"],
+        )
+
         if user_access.is_superuser:
             return ["admin", "openedx"]
         elif user_access.is_staff:
@@ -111,46 +138,3 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
                 courses.append(course_id)
 
         return courses
-
-
-UserAccess = namedtuple(
-    "UserAccess", ["username", "is_superuser", "is_staff"]
-)
-
-
-def _fetch_openedx_user_access(username):
-    """
-    Fetches the given user's access details from the Open edX User database
-
-    NOTE: Open edX JWT seems to provide this info with the "profile" scope.
-    How do we access this via the AllAuth OAuth2?
-    """
-    cxn = _connect_openedx_db()
-    cursor = cxn.cursor()
-
-    query = "SELECT is_staff, is_superuser FROM auth_user WHERE username=%s"
-    if cursor.execute(query, (username,)):
-        (is_staff, is_superuser) = cursor.fetchone()
-        user_access = UserAccess(
-            username=username,
-            is_superuser=is_superuser,
-            is_staff=is_staff,
-        )
-    else:
-        user_access = UserAccess(
-            username=username,
-            is_superuser=False,
-            is_staff=False,
-        )
-
-    cursor.close()
-    cxn.close()
-    return user_access
-
-
-def _connect_openedx_db():
-    """
-    Return an open connection to the Open edX MySQL database.
-    """
-    openedx_database = current_app.config['OPENEDX_DATABASE']
-    return MySQLdb.connect(**openedx_database)

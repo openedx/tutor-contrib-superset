@@ -25,6 +25,14 @@ OPENEDX_API_URLS = {
     "get_profile": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_USER_PROFILE_PATH"]),
     "get_courses": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_COURSES_LIST_PATH"]),
 }
+OPENEDX_JWT_HEADER_PAYLOAD_COOKIE = os.environ.get(
+    "OPENEDX_JWT_HEADER_PAYLOAD_COOKIE",
+    "edx-jwt-cookie-header-payload",
+)
+OPENEDX_JWT_SIGNATURE_COOKIE = os.environ.get(
+    "OPENEDX_JWT_SIGNATURE_COOKIE",
+    "edx-jwt-cookie-signature",
+)
 
 # Set the authentication type to OAuth
 AUTH_TYPE = AUTH_OAUTH
