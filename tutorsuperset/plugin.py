@@ -17,7 +17,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         # Each new setting is a pair: (setting_name, default_value).
         # Prefix your setting names with 'SUPERSET_'.
         ("SUPERSET_VERSION", __version__),
-        ("SUPERSET_TAG", "2.1.0"),
+        ("SUPERSET_TAG", "2.0.1"),
         ("SUPERSET_HOST", "superset.{{ LMS_HOST }}"),
         ("SUPERSET_PORT", "8088"),
         ("SUPERSET_DB_DIALECT", "mysql"),
@@ -37,6 +37,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_ADMIN_EMAIL", "admin@openedx.org"),
         # Set to 0 to have no row limit.
         ("SUPERSET_ROW_LIMIT", 100_000),
+        ("SUPERSET_SENTRY_DSN", ""),
     ]
 )
 

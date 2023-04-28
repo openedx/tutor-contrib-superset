@@ -132,6 +132,17 @@ WEBDRIVER_BASEURL_USER_FRIENDLY = WEBDRIVER_BASEURL
 
 SQLLAB_CTAS_NO_LIMIT = True
 
+
+{% if SUPERSET_SENTRY_DSN %}
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+sentry_sdk.init(
+    dsn='{{ SUPERSET_SENTRY_DSN }}',
+    integrations=[FlaskIntegration()],
+)
+{% endif %}
+
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
