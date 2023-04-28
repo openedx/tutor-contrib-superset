@@ -3,6 +3,7 @@ import logging
 import MySQLdb
 
 from flask import current_app, session
+from flask import request
 
 from superset.security import SupersetSecurityManager
 from superset.utils.memoized import memoized
@@ -30,7 +31,8 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
 
             user_profile_url = openedx_apis['get_profile'].format(username=username)
             user_profile = oauth_remote.get(user_profile_url).json()
-
+            cookies = request.cookies
+            print(cookies)
             user_roles = self._get_user_roles(username)
 
             return {
