@@ -1,3 +1,4 @@
+{% if RUN_SUPERSET %}
 - name: superset-docker
   files:
     - plugins/superset/apps/docker/docker-bootstrap.sh
@@ -22,3 +23,4 @@
   options:
     labels:
         app.kubernetes.io/name: superset
+{% endif %}

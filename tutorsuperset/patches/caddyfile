@@ -1,4 +1,6 @@
+{% if RUN_SUPERSET %}
 # Superset
 {{ SUPERSET_HOST }}{$default_site_port} {
     import proxy "superset:8088"
 }
+{% endif %}

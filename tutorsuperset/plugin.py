@@ -54,6 +54,7 @@ hooks.Filters.CONFIG_UNIQUE.add_items(
         ("SUPERSET_OAUTH2_CLIENT_SECRET", "{{ 16|random_string }}"),
         ("SUPERSET_ADMIN_USERNAME", "{{ 12|random_string }}"),
         ("SUPERSET_ADMIN_PASSWORD", "{{ 24|random_string }}"),
+        ("RUN_SUPERSET", True),
     ]
 )
 

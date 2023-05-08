@@ -1,3 +1,4 @@
+{% if RUN_SUPERSET %}
 superset:
   {% include 'base-docker-compose-services' %}
     OPENEDX_LMS_ROOT_URL: "http://{{ LMS_HOST }}:8000"
@@ -29,4 +30,4 @@ superset-worker-beat:
   depends_on:
     - mysql
     - redis
-
+{% endif %}
