@@ -1,3 +1,4 @@
+{% if RUN_SUPERSET %}
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -203,3 +204,4 @@ spec:
         - name: data
           configMap:
             name: superset-data
+{% endif %}
