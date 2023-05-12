@@ -143,6 +143,10 @@ sentry_sdk.init(
 )
 {% endif %}
 
+{% if ENABLE_HTTPS %}
+TALISMAN_ENABLED = {{SUPERSET_TALISMAN_ENABLED}}
+TALISMAN_CONFIG = {{SUPERSET_TALISMAN_CONFIG}}
+{% endif %}
 #
 # Optionally import superset_config_docker.py (which will have been included on
 # the PYTHONPATH) in order to allow for local settings to be overridden
