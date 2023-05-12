@@ -90,3 +90,9 @@ from openedx_jinja_filters import can_view_courses
 JINJA_CONTEXT_ADDONS = {
     'can_view_courses': can_view_courses,
 }
+
+PREFERRED_URL_SCHEME = "https"
+ENABLE_PROXY_FIX = True
+FEATURE_FLAGS = {
+    "DYNAMIC_PLUGINS": True
+}
