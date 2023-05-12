@@ -91,8 +91,9 @@ JINJA_CONTEXT_ADDONS = {
     'can_view_courses': can_view_courses,
 }
 
-PREFERRED_URL_SCHEME = "https"
+{% if ENABLE_HTTPS %}
 ENABLE_PROXY_FIX = True
 FEATURE_FLAGS = {
     "DYNAMIC_PLUGINS": True
 }
+{% endif %}
