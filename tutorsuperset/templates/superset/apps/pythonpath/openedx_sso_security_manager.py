@@ -67,11 +67,6 @@ def add_bearer_jwt_token(token, uri, headers, body, placement='header'):
     return uri, headers, body
 
 
-class FlaskOauth2OpenedxApp(FlaskOAuth2App):
-
-    def fetch_access_token(self, url=None, token_type="jwt", **kwargs):
-        """Alias for fetch_token."""
-        return self.fetch_token(url, token_type=token_type, **kwargs)
 
 
 class OpenedxSSOView(AuthOAuthView):
@@ -148,7 +143,6 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         self.oauth.oauth2_client_cls.client_cls.token_auth_class.SIGN_METHODS.update({
             "jwt": add_bearer_jwt_token,
         })
-        self.oauth.oauth2_client_cls = FlaskOauth2OpenedxApp
 
     def set_oauth_session(self, provider, oauth_response):
         """
