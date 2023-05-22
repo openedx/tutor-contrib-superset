@@ -38,9 +38,9 @@ cryptography==40.0.2
     # via secretstorage
 dill==0.3.6
     # via pylint
-docutils==0.20
+docutils==0.20.1
     # via readme-renderer
-google-auth==2.18.0
+google-auth==2.18.1
     # via
     #   -r requirements/base.txt
     #   kubernetes
@@ -120,7 +120,7 @@ pyasn1-modules==0.3.0
     #   google-auth
 pycparser==2.21
     # via cffi
-pycryptodome==3.17
+pycryptodome==3.18.0
     # via
     #   -r requirements/base.txt
     #   tutor
@@ -183,7 +183,7 @@ tutor==15.3.5
     # via -r requirements/base.txt
 twine==4.0.2
     # via -r requirements/dev.in
-types-setuptools==67.7.0.2
+types-setuptools==67.8.0.0
     # via -r requirements/dev.in
 typing-extensions==4.5.0
     # via
@@ -203,7 +203,7 @@ urllib3==1.26.15
     #   twine
 webencodings==0.5.1
     # via bleach
-websocket-client==1.5.1
+websocket-client==1.5.2
     # via
     #   -r requirements/base.txt
     #   kubernetes
