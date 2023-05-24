@@ -90,3 +90,9 @@ from openedx_jinja_filters import can_view_courses
 JINJA_CONTEXT_ADDONS = {
     'can_view_courses': can_view_courses,
 }
+
+{% if not ENABLE_WEB_PROXY %}
+# Caddy is running behind a proxy: Superset needs to handle x-forwarded-* headers
+# https://flask.palletsprojects.com/en/latest/deploying/proxy_fix/
+ENABLE_PROXY_FIX = True
+{% endif %}
