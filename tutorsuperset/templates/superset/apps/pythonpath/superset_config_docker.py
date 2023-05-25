@@ -57,7 +57,7 @@ OAUTH_PROVIDERS = [
 AUTH_USER_REGISTRATION = True
 
 # The default user self registration role
-AUTH_USER_REGISTRATION_ROLE = "Gamma"
+AUTH_USER_REGISTRATION_ROLE = "{{SUPERSET_OPENEDX_ROLE_NAME}}"
 
 # Should we replace ALL the user's roles each login, or only on registration?
 AUTH_ROLES_SYNC_AT_LOGIN = True
@@ -80,9 +80,7 @@ CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 FEATURE_FLAGS = {
     "ALERT_REPORTS": True,
     "ENABLE_TEMPLATE_PROCESSING": True,
-    # Can't enable this until we can add roles to dashboards
-    # cf https://github.com/opus-42/superset-api-client/pull/31
-    #"DASHBOARD_RBAC": True,
+    "DASHBOARD_RBAC": True,
 }
 
 # Add this custom template processor which returns the list of courses the current user can access
