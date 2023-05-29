@@ -1,14 +1,43 @@
-from collections import namedtuple
 import logging
-import MySQLdb
+from collections import namedtuple
 
+import jwt
+from authlib.common.urls import add_params_to_qs, add_params_to_uri
 from flask import current_app, session
-
 from superset.security import SupersetSecurityManager
 from superset.utils.memoized import memoized
 
+log = logging.getLogger(__name__)
+
+
+def add_to_headers(token, headers=None):
+    """Add a Bearer Token to the request URI.
+    Recommended method of passing bearer tokens.
+    Authorization: Bearer h480djs93hd8
+    """
+    headers = headers or {}
+    headers['Authorization'] = 'JWT {}'.format(token)
+    return headers
+
+
+def add_bearer_jwt_token(token, uri, headers, body, placement='header'):
+    """Add a Bearer Token to the request."""
+    if placement in ('uri', 'url', 'query'):
+        uri = add_params_to_uri(token, uri)
+    elif placement in ('header', 'headers'):
+        headers = add_to_headers(token, headers)
+    elif placement == 'body':
+        body = add_params_to_qs(token, body)
+    return uri, headers, body
+
 
 class OpenEdxSsoSecurityManager(SupersetSecurityManager):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.oauth.oauth2_client_cls.client_cls.token_auth_class.SIGN_METHODS.update({
+            "jwt": add_bearer_jwt_token,
+        })
 
     def set_oauth_session(self, provider, oauth_response):
         """
@@ -19,27 +48,23 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         if provider == "openedxsso":
             session["oauth_token"] = oauth_response
         return res
+    
+    def decoded_user_info(self):
+        return jwt.decode(self.access_token, algorithms=["HS256"], options={"verify_signature": False})
 
     def oauth_user_info(self, provider, response=None):
-        openedx_apis = current_app.config['OPENEDX_API_URLS']
         if provider == 'openedxsso':
-            oauth_remote = self.appbuilder.sm.oauth_remotes[provider]
-            username_url = openedx_apis['get_username']
-            me = oauth_remote.get(username_url).json()
-            username = me['username']
+            user_profile = self.decoded_user_info()
 
-            user_profile_url = openedx_apis['get_profile'].format(username=username)
-            user_profile = oauth_remote.get(user_profile_url).json()
-
-            user_roles = self._get_user_roles(username)
+            user_roles = self._get_user_roles(user_profile.get('preferred_username'))
 
             return {
                 'name': user_profile['name'],
                 'email': user_profile['email'],
-                'id': user_profile['username'],
-                'username': user_profile['username'],
-                'first_name': '',
-                'last_name': '',
+                'id': user_profile['preferred_username'],
+                'username': user_profile['preferred_username'],
+                'first_name': user_profile.get('given_name') or user_profile.get('name', ''),
+                'last_name': user_profile.get('family_name'),
                 'role_keys': user_roles,
             }
 
@@ -63,10 +88,11 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
         """
         Returns the Superset roles that should be associated with the given user.
         """
-        user_access = _fetch_openedx_user_access(username)
-        if user_access.is_superuser:
+        decoded_access_token = self.decoded_user_info()
+        
+        if decoded_access_token.get("superuser", False):
             return ["admin", "openedx"]
-        elif user_access.is_staff:
+        elif decoded_access_token.get("administrator", False):
             return ["alpha", "openedx"]
         else:
             # User has to have staff access to one or more courses to view any content here.
@@ -114,41 +140,3 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
 UserAccess = namedtuple(
     "UserAccess", ["username", "is_superuser", "is_staff"]
 )
-
-
-def _fetch_openedx_user_access(username):
-    """
-    Fetches the given user's access details from the Open edX User database
-
-    NOTE: Open edX JWT seems to provide this info with the "profile" scope.
-    How do we access this via the AllAuth OAuth2?
-    """
-    cxn = _connect_openedx_db()
-    cursor = cxn.cursor()
-
-    query = "SELECT is_staff, is_superuser FROM auth_user WHERE username=%s"
-    if cursor.execute(query, (username,)):
-        (is_staff, is_superuser) = cursor.fetchone()
-        user_access = UserAccess(
-            username=username,
-            is_superuser=is_superuser,
-            is_staff=is_staff,
-        )
-    else:
-        user_access = UserAccess(
-            username=username,
-            is_superuser=False,
-            is_staff=False,
-        )
-
-    cursor.close()
-    cxn.close()
-    return user_access
-
-
-def _connect_openedx_db():
-    """
-    Return an open connection to the Open edX MySQL database.
-    """
-    openedx_database = current_app.config['OPENEDX_DATABASE']
-    return MySQLdb.connect(**openedx_database)

@@ -1,11 +1,10 @@
-from glob import glob
 import os
-import pkg_resources
+from glob import glob
 
+import pkg_resources
 from tutor import hooks
 
 from .__about__ import __version__
-
 
 ########################################
 # CONFIGURATION
@@ -27,8 +26,6 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         ("SUPERSET_DB_USERNAME", "superset"),
         ("SUPERSET_OAUTH2_ACCESS_TOKEN_PATH", "/oauth2/access_token/"),
         ("SUPERSET_OAUTH2_AUTHORIZE_PATH", "/oauth2/authorize/"),
-        ("SUPERSET_OPENEDX_USERNAME_PATH", "/api/user/v1/me"),
-        ("SUPERSET_OPENEDX_USER_PROFILE_PATH", "/api/user/v1/accounts/{username}"),
         (
             "SUPERSET_OPENEDX_COURSES_LIST_PATH",
             "/api/courses/v1/courses/?permissions={permission}&username={username}",
