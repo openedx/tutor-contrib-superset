@@ -42,11 +42,12 @@ Connect to Superset's UI on the configured port (default is `:8088`):
 Access and Permissions
 ----------------------
 
-Superset is configured to use Open edX SSO for authentication, and the global Open edX user permissions and course access for authorization.
+Superset is configured to use Open edX SSO for authentication, 
+and the global Open edX user permissions and course access for authorization.
 
 * Users who are "superusers" in Open edX are made members of the built-in Superset `Admin`_ role, and the custom `Open edX` role.
-* Users who are global "staff" in Open edX are made members of the built-in Superset `Alpha`_ role, the custom `Open edX` role.
-* Users who have staff access to any courses in Open edX are made members of the built-in Superset `Gamma`_ role, the custom `Open edX` role.
+* Users who are global "staff" in Open edX are made members of the built-in Superset `Alpha`_ role, and the custom `Open edX` role.
+* Users who have staff access to any courses in Open edX are made members of the Superset custom `Open edX` role.
 * All other users, including anonymous users, are not made members of any roles, and so cannot see or change any data in Superset.
 
 There is also an `Admin`_ user with a randomly-generated username and password which can access the Superset API, but cannot login to the GUI.
@@ -56,7 +57,7 @@ Open edX role
 
 The custom ``Open edX`` role controls access to course data using `Row Level Security Filters`_ managed by the `OARS`_ plugin.
 
-`Admin`_ and `Alpha`_ users can see data from any course, but `Gamma`_ users can only see data from courses they have staff access to.
+`Admin`_ and `Alpha`_ users can see data from any course, but `Open edX` users can only see data from courses they have staff access to.
 
 
 .. _Admin: https://superset.apache.org/docs/security/#admin

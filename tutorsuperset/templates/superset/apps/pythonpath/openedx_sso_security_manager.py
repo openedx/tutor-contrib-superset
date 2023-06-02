@@ -72,7 +72,7 @@ class OpenEdxSsoSecurityManager(SupersetSecurityManager):
             # User has to have staff access to one or more courses to view any content here.
             courses = self.get_courses(username)
             if courses:
-                return ["gamma", "openedx"]
+                return ["openedx"]
             return []
 
     @memoized(watch=('access_token',))
