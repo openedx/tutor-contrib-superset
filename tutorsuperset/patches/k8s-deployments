@@ -35,16 +35,6 @@ spec:
               value: "{{ SUPERSET_DB_PASSWORD }}"
             - name: DATABASE_USER
               value: "{{ SUPERSET_DB_USERNAME }}"
-            - name: OPENEDX_MYSQL_HOST
-              value: "{{ MYSQL_HOST }}"
-            - name: OPENEDX_MYSQL_PORT
-              value: "{{ MYSQL_PORT }}"
-            - name: OPENEDX_MYSQL_DATABASE
-              value: "{{ OPENEDX_MYSQL_DATABASE }}"
-            - name: OPENEDX_MYSQL_USERNAME
-              value: "{{ OPENEDX_MYSQL_USERNAME }}"
-            - name: OPENEDX_MYSQL_PASSWORD
-              value: "{{ OPENEDX_MYSQL_PASSWORD }}"
             - name: OAUTH2_CLIENT_ID
               value: "{{ SUPERSET_OAUTH2_CLIENT_ID }}"
             - name: OAUTH2_CLIENT_SECRET
@@ -71,10 +61,6 @@ spec:
               value: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
             - name: OAUTH2_AUTHORIZE_PATH
               value: "{{ SUPERSET_OAUTH2_AUTHORIZE_PATH }}"
-            - name: OPENEDX_USERNAME_PATH
-              value: "{{ SUPERSET_OPENEDX_USERNAME_PATH }}"
-            - name: OPENEDX_USER_PROFILE_PATH
-              value: "{{ SUPERSET_OPENEDX_USER_PROFILE_PATH }}"
             - name: OPENEDX_COURSES_LIST_PATH
               value: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}"
             - name: OPENEDX_LMS_ROOT_URL
@@ -138,16 +124,6 @@ spec:
               value: "{{ SUPERSET_DB_PASSWORD }}"
             - name: DATABASE_USER
               value: "{{ SUPERSET_DB_USERNAME }}"
-            - name: OPENEDX_MYSQL_HOST
-              value: "{{ MYSQL_HOST }}"
-            - name: OPENEDX_MYSQL_PORT
-              value: "{{ MYSQL_PORT }}"
-            - name: OPENEDX_MYSQL_DATABASE
-              value: "{{ OPENEDX_MYSQL_DATABASE }}"
-            - name: OPENEDX_MYSQL_USERNAME
-              value: "{{ OPENEDX_MYSQL_USERNAME }}"
-            - name: OPENEDX_MYSQL_PASSWORD
-              value: "{{ OPENEDX_MYSQL_PASSWORD }}"
             - name: OAUTH2_CLIENT_ID
               value: "{{ SUPERSET_OAUTH2_CLIENT_ID }}"
             - name: OAUTH2_CLIENT_SECRET
@@ -174,10 +150,6 @@ spec:
               value: "{{ SUPERSET_OAUTH2_ACCESS_TOKEN_PATH }}"
             - name: OAUTH2_AUTHORIZE_PATH
               value: "{{ SUPERSET_OAUTH2_AUTHORIZE_PATH }}"
-            - name: OPENEDX_USERNAME_PATH
-              value: "{{ SUPERSET_OPENEDX_USERNAME_PATH }}"
-            - name: OPENEDX_USER_PROFILE_PATH
-              value: "{{ SUPERSET_OPENEDX_USER_PROFILE_PATH }}"
             - name: OPENEDX_COURSES_LIST_PATH
               value: "{{ SUPERSET_OPENEDX_COURSES_LIST_PATH }}"
             - name: OPENEDX_LMS_ROOT_URL

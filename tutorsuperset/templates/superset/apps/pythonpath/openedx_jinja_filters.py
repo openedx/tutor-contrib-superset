@@ -5,7 +5,6 @@ cf https://superset.apache.org/docs/installation/sql-templating/
 """
 from superset.extensions import security_manager
 
-
 ALL_COURSES = "1 = 1"
 NO_COURSES = "1 = 0"
 

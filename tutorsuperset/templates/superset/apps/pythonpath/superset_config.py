@@ -32,7 +32,6 @@ from typing import Optional
 
 from cachelib.redis import RedisCache
 from celery.schedules import crontab
-
 from superset.superset_typing import CacheConfig
 
 

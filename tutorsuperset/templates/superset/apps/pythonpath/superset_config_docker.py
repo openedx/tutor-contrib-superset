@@ -1,5 +1,6 @@
 import os
 from urllib.parse import urljoin
+
 from flask_appbuilder.security.manager import AUTH_OAUTH
 
 # Application secret key
@@ -10,19 +11,8 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 ROW_LIMIT = int({{ SUPERSET_ROW_LIMIT }})
 SQL_MAX_ROW = ROW_LIMIT
 
-# Credentials for connecting to the Open edX MySQL database
-OPENEDX_DATABASE = {
-    'host': os.environ["OPENEDX_MYSQL_HOST"],
-    'port': int(os.environ["OPENEDX_MYSQL_PORT"]),
-    'database': os.environ["OPENEDX_MYSQL_DATABASE"],
-    'user': os.environ["OPENEDX_MYSQL_USERNAME"],
-    'password': os.environ["OPENEDX_MYSQL_PASSWORD"],
-}
-
 OPENEDX_LMS_ROOT_URL = os.environ["OPENEDX_LMS_ROOT_URL"]
 OPENEDX_API_URLS = {
-    "get_username": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_USERNAME_PATH"]),
-    "get_profile": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_USER_PROFILE_PATH"]),
     "get_courses": urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OPENEDX_COURSES_LIST_PATH"]),
 }
 
@@ -37,14 +27,15 @@ OAUTH_PROVIDERS = [
             'client_id': os.environ["OAUTH2_CLIENT_ID"],
             'client_secret': os.environ["OAUTH2_CLIENT_SECRET"],
             'client_kwargs':{
-                'scope': 'read'               # Scope for the Authorization
+                'scope': 'profile email user_id'               # Scope for the Authorization
             },
             'access_token_method':'POST',    # HTTP Method to call access_token_url
             'access_token_params':{        # Additional parameters for calls to access_token_url
                 'client_id': os.environ["OAUTH2_CLIENT_ID"],
+                'token_type': 'jwt'
             },
             'access_token_headers':{    # Additional headers for calls to access_token_url
-                'Authorization': 'Basic Base64EncodedClientIdAndSecret'
+                'Authorization': 'JWT Base64EncodedClientIdAndSecret'
             },
             'api_base_url': OPENEDX_LMS_ROOT_URL,
             'access_token_url': urljoin(OPENEDX_LMS_ROOT_URL, os.environ["OAUTH2_ACCESS_TOKEN_PATH"]),
@@ -73,6 +64,7 @@ AUTH_ROLES_MAPPING = {
 }
 
 from openedx_sso_security_manager import OpenEdxSsoSecurityManager
+
 CUSTOM_SECURITY_MANAGER = OpenEdxSsoSecurityManager
 
 
@@ -85,6 +77,7 @@ FEATURE_FLAGS = {
 
 # Add this custom template processor which returns the list of courses the current user can access
 from openedx_jinja_filters import can_view_courses
+
 JINJA_CONTEXT_ADDONS = {
     'can_view_courses': can_view_courses,
 }

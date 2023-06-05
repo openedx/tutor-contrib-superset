@@ -64,7 +64,7 @@ format: ## Format code automatically
 	black $(BLACK_OPTS)
 
 isort: ##  Sort imports. This target is not mandatory because the output may be incompatible with black formatting. Provided for convenience purposes.
-	isort --skip=templates ${SRC_DIRS}
+	isort ${SRC_DIRS}
 
 ESCAPE = 
 help: ## Print this help
