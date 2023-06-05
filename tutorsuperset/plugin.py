@@ -35,6 +35,14 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         # Set to 0 to have no row limit.
         ("SUPERSET_ROW_LIMIT", 100_000),
         ("SUPERSET_SENTRY_DSN", ""),
+        # List of dicts
+        # [{
+        #    "path": "path-in-the-superset-pod",
+        #    "name": "volume-name",
+        #    "config_map_name": "config-map-name",
+        #    "config_map_folder": "path-to-template-folder",
+        # }]
+        ("SUPERSET_EXTRA_VOLUMES", []),
     ]
 )
 

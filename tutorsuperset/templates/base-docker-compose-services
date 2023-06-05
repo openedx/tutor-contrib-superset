@@ -5,6 +5,11 @@ image: apache/superset:{{ SUPERSET_TAG }}
     - ../../env/plugins/superset/apps/pythonpath:/app/pythonpath
     - ../../env/plugins/superset/apps/data:/app/data
     - ../../env/plugins/superset/apps/superset_home:/app/superset_home
+  {% if SUPERSET_EXTRA_DEV_VOLUMES %}
+    {% for volume in SUPERSET_EXTRA_DEV_VOLUMES %}
+    - {{ volume }}
+    {% endfor %}
+  {% endif %}
   restart: unless-stopped
   environment:
     DATABASE_DIALECT: {{ SUPERSET_DB_DIALECT }}

@@ -76,6 +76,12 @@ spec:
               name: pythonpath
             - mountPath: /app/data
               name: data
+          {% if SUPERSET_EXTRA_VOLUMES %}
+            {% for volume in SUPERSET_EXTRA_VOLUMES %}
+            - mountPath: {{ volume.path }}
+              name: {{ volume.name }}
+            {% endfor %}
+          {% endif %}
       restartPolicy: Always
       volumes:
         - name: docker
@@ -87,6 +93,13 @@ spec:
         - name: data
           configMap:
             name: superset-data
+      {% if SUPERSET_EXTRA_VOLUMES %}
+        {% for volume in SUPERSET_EXTRA_VOLUMES %}
+        - name: {{ volume.name }}
+          configMap:
+            name: {{ volume.config_map_name }}
+        {% endfor %}
+      {% endif %}
 
 ---
 apiVersion: apps/v1
@@ -165,6 +178,12 @@ spec:
               name: pythonpath
             - mountPath: /app/data
               name: data
+          {% if SUPERSET_EXTRA_VOLUMES %}
+            {% for volume in SUPERSET_EXTRA_VOLUMES %}
+            - mountPath: {{ volume.path }}
+              name: {{ volume.name }}
+            {% endfor %}
+          {% endif %}
       restartPolicy: Always
       volumes:
         - name: docker
@@ -176,4 +195,11 @@ spec:
         - name: data
           configMap:
             name: superset-data
+      {% if SUPERSET_EXTRA_VOLUMES %}
+        {% for volume in SUPERSET_EXTRA_VOLUMES %}
+        - name: {{ volume.name }}
+          configMap:
+            name: {{ volume.config_map_name }}
+        {% endfor %}
+      {% endif %}
 {% endif %}
