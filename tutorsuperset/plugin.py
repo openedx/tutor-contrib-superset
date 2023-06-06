@@ -43,6 +43,7 @@ hooks.Filters.CONFIG_DEFAULTS.add_items(
         #    "config_map_folder": "path-to-template-folder",
         # }]
         ("SUPERSET_EXTRA_VOLUMES", []),
+        ("SUPERSET_EXTRA_DEV_VOLUMES", []),
     ]
 )
 
