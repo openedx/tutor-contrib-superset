@@ -1,3 +1,10 @@
+THIS REPOSITORY IS DEPRECATED
+=============================
+
+This functionality now lives in `tutor-contrib-oars <https://github.com/openedx/tutor-contrib-oars>`__ as we work to consolidate the Open edX analytics functionality into one place.
+
+This repository was experimental as we worked on OARS and will be archived soon.
+
 Apache Superset plugin for `Tutor <https://docs.tutor.overhang.io>`__
 ===================================================================================
 
@@ -42,7 +49,7 @@ Connect to Superset's UI on the configured port (default is `:8088`):
 Access and Permissions
 ----------------------
 
-Superset is configured to use Open edX SSO for authentication, 
+Superset is configured to use Open edX SSO for authentication,
 and the global Open edX user permissions and course access for authorization.
 
 * Users who are "superusers" in Open edX are made members of the built-in Superset `Admin`_ role, and the custom `Open edX` role.
